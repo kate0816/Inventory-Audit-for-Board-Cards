@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>庫存管理系統</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header img {
+            height: 50px;
+            vertical-align: middle;
+        }
+        header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: normal;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .section {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 10px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col {
+            flex: 1;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        <h1>撼訊科技股份有限公司</h1>
+    </header>
+    <div class="container">
+        <div class="section">
+            <h2>板卡帳上庫存盤點</h2>
+            <form action="/" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="expected_file">上傳帳上庫存明細文件：</label>
+                    <input type="file" class="form-control-file" name="expected_file" id="expected_file" required>
+                </div>
+                <div class="form-group">
+                    <label for="actual_file">上傳清點明細文件：</label>
+                    <input type="file" class="form-control-file" name="actual_file" id="actual_file" required>
+                </div>
+                <button type="submit" class="btn btn-primary">上傳文件</button>
+            </form>
+        </div>
+        {% if comparison_html %}
+        <div class="section">
+            <h2>下載對比結果：</h2>
+            <a href="/download" class="btn btn-success">下載 Excel 文件</a>
+        </div>
+    </div>
+    {% endif %}
+    {% if comparison_html %}
+    <div class="section">
+        <h2>庫存對比檢討預覽：</h2>
+        {{ comparison_html|safe }}
+    </div>
+        {% endif %}
+        {% if expected_html or actual_html %}
+        <div class="row">
+            {% if expected_html %}
+            <div class="col">
+                <h2>帳上庫存明細預覽：</h2>
+                {{ expected_html|safe }}
+            </div>
+            {% endif %}
+            {% if actual_html %}
+            <div class="col">
+                <h2>清點明細預覽：</h2>
+                {{ actual_html|safe }}
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
